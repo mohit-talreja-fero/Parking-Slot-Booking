@@ -8,6 +8,18 @@ class Space(models.Model):
     def __str__(self):
         return self.name
 
+    @property
+    def total_slots(self):
+        return self.space_slots.count()
+
+    @property
+    def unoccupied_slots(self):
+        return self.space_slots.filter(is_available=True).count()
+
+    @property
+    def occupied_slots(self):
+        return self.space_slots.filter(is_available=False).count()
+
     def add_slots(self, total_slots):
         self.space_slots.all().delete()
         for i in range(total_slots):

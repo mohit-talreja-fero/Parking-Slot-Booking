@@ -3,7 +3,7 @@ from .models import Slot, Space, SlotBook
 
 
 class SpaceListSerializer(serializers.ModelSerializer):
-    total_slots = serializers.SerializerMethodField()
+    # total_slots = serializers.SerializerMethodField()
 
     class Meta:
         model = Space
@@ -11,31 +11,16 @@ class SpaceListSerializer(serializers.ModelSerializer):
             "id", "name", "total_slots",
         )
 
-    def get_total_slots(self, space: Space):
-        return space.space_slots.count()
-
-    def get_available_slots(self, space: Space):
-        return space.space_slots.filter(is_available=True).count()
-
-    def get_occupied_slots(self, space: Space):
-        return space.space_slots.filter(is_available=False).count()
-
 
 class SpaceDetailSerializer(SpaceListSerializer):
-    available_slots = serializers.SerializerMethodField()
-    occupied_slots = serializers.SerializerMethodField()
+    # available_slots = serializers.SerializerMethodField()
+    # occupied_slots = serializers.SerializerMethodField()
 
     class Meta:
         model = Space
         fields = (
-            "id", "name", "total_slots", "available_slots", "occupied_slots",
+            "id", "name", "total_slots", "unoccupied_slots", "occupied_slots",
         )
-
-    def get_available_slots(self, space: Space):
-        return space.space_slots.filter(is_available=True).count()
-
-    def get_occupied_slots(self, space: Space):
-        return space.space_slots.filter(is_available=False).count()
 
 
 class SpaceSerializer(serializers.ModelSerializer):
