@@ -34,6 +34,9 @@ class Slot(models.Model):
     def __str__(self):
         return f"{self.space.name} - {self.id}"
 
+    def book_slot(self, details: dict):
+        SlotBook.objects.create(slot=self, **details)
+
 
 class SlotBook(models.Model):
     slot = models.ForeignKey(Slot, on_delete=models.CASCADE, related_name="slot_bookings")
