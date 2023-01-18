@@ -1,23 +1,17 @@
 <template>
-  <div>
-    <SlotTray />
-  </div>
+  <SlotTray />
 </template>
 
 <script>
 import SlotTray from "./Common/SlotTray.vue";
-export default {
-  name: "HelloWorld",
-  props: {
-    msg: String,
-  },
-  components: {
-    SlotTray,
-  },
-  mounted() {
-    // this.$api.space.getSpaceList();
-    this.$api.space.getSpaceDetails(1);
-  },
-};
-</script>
 
+  export default {
+    name: 'HelloWorld',
+    data(){
+      return {}
+    },
+    components: {
+      SlotTray,
+    }
+  }
+</script>

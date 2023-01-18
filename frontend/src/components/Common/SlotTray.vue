@@ -13,12 +13,10 @@
       </template>
     </v-row>
   </v-container>
-  
 </template>
 
 <script>
 export default {
   name: "SlotTray",
 };
-
-<script />
+</script>
