@@ -1,16 +1,22 @@
 <template>
-  <h1>Hello World</h1>
+  <div>
+    <SlotTray />
+  </div>
 </template>
 
 <script>
+import SlotTray from "./Common/SlotTray.vue";
 export default {
   name: "HelloWorld",
   props: {
     msg: String,
   },
+  components: {
+    SlotTray,
+  },
   mounted() {
-    console.log("Hello World");
-    this.$api.space.getSpaceList({ params: "" });
+    // this.$api.space.getSpaceList();
+    this.$api.space.getSpaceDetails(1);
   },
 };
 </script>

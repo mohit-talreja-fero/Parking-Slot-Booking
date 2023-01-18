@@ -1,3 +1,3 @@
 export const space = {
-    base: "/parking/space/",
+    base: "/parking/space",
 }
