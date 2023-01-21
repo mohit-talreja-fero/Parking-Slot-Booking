@@ -1,5 +1,6 @@
-from rest_framework import viewsets, status, response
+from rest_framework import viewsets, status, response, renderers
 from rest_framework.decorators import action
+from rest_framework.response import Response
 
 from space import serializers, models
 
@@ -16,12 +17,19 @@ class SpaceViewSet(viewsets.ModelViewSet):
 
         return serializers.SpaceDetailSerializer
 
+    @action(methods=["GET"], detail=True)
+    def slot_list(self, request, *args, **kwargs):
+        space = self.get_object()
+        space_slots = space.space_slots.all()
+        serializer = serializers.SLotListSerializer(space_slots, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
-class SlotViewSet(viewsets.ModelViewSet):
-    serializer_class = serializers.BookSlotSerializer
+
+class SlotViewSet(viewsets.GenericViewSet):
     queryset = models.Slot.objects.all()
+    # renderer_classes = [renderers.JSONRenderer, ]
 
-    @action(methods=["POST"], detail=True)
+    @action(methods=["PATCH"], detail=True)
     def book_my_slot(self, request, *args, **kwargs):
         data = request.data
         slot = self.get_object()
@@ -30,4 +38,5 @@ class SlotViewSet(viewsets.ModelViewSet):
             return response.Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
         serializer.save()
-        return response.Response(serializer.data, status=status.HTTP_200_OK)
+        msg = "Successfully Booked Slot!"
+        return response.Response({"message": msg}, status=status.HTTP_200_OK)
