@@ -1,5 +1,7 @@
 from rest_framework import serializers
-from .models import Slot, Space, SlotBook
+from lib import constants
+from .helpers import get_duration_and_payment_for_start_and_end_time
+from .models import Slot, Space
 
 
 class SpaceListSerializer(serializers.ModelSerializer):
@@ -58,18 +60,32 @@ class SpaceSerializer(serializers.ModelSerializer):
         return space
 
 
+class SLotListSerializer(serializers.ModelSerializer):
+    space_name = serializers.CharField(source="space.name")
+
+    class Meta:
+        model = Slot
+        fields = ("id", "space_id", "space_name", "is_available")
+
+
 class BookSlotSerializer(serializers.ModelSerializer):
-    start_time = serializers.DateTimeField(write_only=True, required=True)
-    end_time = serializers.DateTimeField(write_only=True, required=True)
-    payment = serializers.IntegerField(min_value=1, required=True)
+    start_time = serializers.DateTimeField(
+        format=constants.GeneralConstants.DATE_TIME_FORMAT, write_only=True, required=True)
+    end_time = serializers.DateTimeField(
+        format=constants.GeneralConstants.DATE_TIME_FORMAT, write_only=True, required=True)
+    payment = serializers.IntegerField(min_value=1, required=True, write_only=True)
     duration = serializers.IntegerField(required=False, write_only=True)
 
     class Meta:
         model = Slot
-        fields = ("id",)
+        fields = ("id", "start_time", "end_time", "payment", "duration",)
 
     def validate(self, attrs):
-        slot_id = attrs.get("id")
+        slot = self.instance
+
+        if not slot:
+            raise serializers.ValidationError({"id": f"Slot is not available"})
+
         start_time = attrs.get("start_time")
         end_time = attrs.get("end_time")
         duration = attrs.get("duration")  # Calculate on frontend to display user
@@ -81,13 +97,8 @@ class BookSlotSerializer(serializers.ModelSerializer):
         if not duration:
             duration = end_time - start_time
 
-        try:
-            slot = Slot.objects.get(id=slot_id)
-        except Slot.DoesNotExist:
-            raise serializers.ValidationError({"id": f"Slot with ID {slot_id} does not exists"})
-        else:
-            if not slot.is_available:
-                raise serializers.ValidationError({"id": f"Slot with ID {slot_id} is not available"})
+        if not slot.is_available:
+            raise serializers.ValidationError({"id": f"Slot is not available"})
 
         attrs["is_available"] = False
         return attrs
@@ -97,6 +108,13 @@ class BookSlotSerializer(serializers.ModelSerializer):
             "start_time": validated_data.pop("start_time"),
             "end_time": validated_data.pop("end_time"),
         }
+
+        duration, payment = get_duration_and_payment_for_start_and_end_time(
+            start_time=details["start_time"], end_time=details["end_time"])
+        details.update({
+            "payment": payment,
+            "duration": duration,
+        })
         slot = super(BookSlotSerializer, self).update(instance=instance, validated_data=validated_data)
         slot.book_slot(details=details)
         return slot
