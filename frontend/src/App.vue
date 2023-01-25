@@ -1,12 +1,10 @@
 <template>
   <v-app>
-    <v-app-bar app>
-      <h1>PARKING SLOT BOOKING</h1>
-
-      <div class="ml-3 flex">
-      <router-link class="mr-5" to="/">Home</router-link>
-      <router-link class="mr-5" to="/about">About</router-link>
-      <router-link class="mr-5" to="/slot_list">Slot List</router-link>
+    <v-app-bar app color="blue lighten-5" dark>
+      <div>
+        <router-link to="/" class="ma-5">Home</router-link>
+        <router-link to="/about" class="mr-5">About</router-link>
+        <router-link to="/slot_list">Slot List</router-link>
       </div>
     </v-app-bar>
 

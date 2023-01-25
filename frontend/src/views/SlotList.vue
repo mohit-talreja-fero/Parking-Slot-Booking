@@ -2,8 +2,8 @@
   <div>
     <h1>Slot List Page</h1>
     <!-- <li v-for="slot in slots" :key="slot.id">
-      <v-chip class="ma-2" color="primary"> Primary </v-chip>
-    </li> -->
+        <v-chip class="ma-2" color="primary"> Primary </v-chip>
+      </li> -->
     {{ slots }}
   </div>
 </template>
@@ -16,7 +16,7 @@ export default {
       slots: [],
     };
   },
-  created() {
+  beforeMount() {
     this.slots = [];
     this.getSlotList();
   },
@@ -36,5 +36,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
+<style></style>

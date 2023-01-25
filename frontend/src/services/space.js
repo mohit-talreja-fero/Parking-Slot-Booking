@@ -1,14 +1,14 @@
-import { slot } from "@/utils/constant";
+import { space } from "@/utils/constant";
 import {
   handleErrorResponse,
   handleSuccessResponse,
 } from "@/utils/responseHandlers";
 
 export default (axios) => ({
-  getSlotList() {
+  getSpaceList() {
     return new Promise((resolve, reject) => {
       axios
-        .get(slot.list)
+        .get(space.base)
         .then((res) => {
           resolve(handleSuccessResponse(res));
         })
@@ -20,7 +20,7 @@ export default (axios) => ({
   getSpaceDetails(id) {
     return new Promise((resolve, reject) => {
       axios
-        .get(`${slot.base}/${id}/`)
+        .get(`${space.base}/${id}/`)
         .then((res) => {
           resolve(handleSuccessResponse(res));
         })
