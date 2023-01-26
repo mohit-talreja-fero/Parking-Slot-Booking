@@ -1,15 +1,20 @@
 <template>
   <div>
     <h1>Slot List Page</h1>
-    <li v-for="slot in slots" :key="slot.id">
-      <v-chip class="ma-2" color="primary"> Primary </v-chip>
-    </li>
+
+    <v-container v-for="slot in slots" :key="slot.id">
+      <Slot :is_available="slot.is_available" />
+    </v-container>
+    <BookDialog />
   </div>
 </template>
 
 <script>
+import BookDialog from "@/components/BookDialog.vue";
+import Slot from "@/components/Slot.vue";
 export default {
   name: "SlotList",
+  components: { Slot, BookDialog },
   data() {
     return {
       slots: [],
@@ -29,7 +34,9 @@ export default {
         .catch((err) => {
           console.error(err);
         });
-      console.log("----------->", this.slots);
+    },
+    whichClicked(id) {
+      console.log(id);
     },
   },
 };
