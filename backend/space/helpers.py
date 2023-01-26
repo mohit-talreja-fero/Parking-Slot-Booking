@@ -1,3 +1,4 @@
+
 def calculate_duration_hours(start_time=None, end_time=None):
     if start_time >= end_time:
         duration_in_time_difference = start_time - end_time

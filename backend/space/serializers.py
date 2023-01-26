@@ -1,3 +1,4 @@
+from django.utils import timezone
 from rest_framework import serializers
 from lib import constants
 from .helpers import get_duration_and_payment_for_start_and_end_time
@@ -38,14 +39,10 @@ class SpaceSerializer(serializers.ModelSerializer):
             "id", "name", "total_slots",
         )
 
-    def validate(self, attrs):
-        name = attrs.get("name", self.instance.name)
-        if self.instance:
-            attrs["name"] = self.instance.name
-        else:
-            if Space.objects.filter(name__iexact=name).exists():
-                raise serializers.ValidationError({"name": f"Space with Name {name} already exists"})
-        return attrs
+    def validate_name(self, name):
+        if Space.objects.filter(name__iexact=name).exists():
+            raise serializers.ValidationError({"name": f"Space with Name {name} already exists"})
+        return name
 
     def create(self, validated_data: dict):
         total_slots = validated_data.pop("total_slots")
@@ -80,11 +77,17 @@ class BookSlotSerializer(serializers.ModelSerializer):
         model = Slot
         fields = ("id", "start_time", "end_time", "payment", "duration",)
 
+    def validate_start_time(self, start_time):
+        if start_time < timezone.now():
+            raise serializers.ValidationError("Past date mat bhej bhai samaj nahi aata kya")
+
+        time_difference = start_time - timezone.now()
+        if time_difference.days != 1:
+            raise serializers.ValidationError("Slot should be booked 24 Hrs prior")
+        return start_time
+
     def validate(self, attrs):
         slot = self.instance
-
-        if not slot:
-            raise serializers.ValidationError({"id": f"Slot is not available"})
 
         start_time = attrs.get("start_time")
         end_time = attrs.get("end_time")
