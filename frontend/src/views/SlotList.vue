@@ -1,17 +1,16 @@
 <template>
   <div>
     <h1>Slot List Page</h1>
-    <!-- <li v-for="slot in slots" :key="slot.id">
-        <v-chip class="ma-2" color="primary"> Primary </v-chip>
-      </li> -->
-    {{ slots }}
+    <li v-for="slot in slots" :key="slot.id">
+      <v-chip class="ma-2" color="primary"> Primary </v-chip>
+    </li>
   </div>
 </template>
 
 <script>
 export default {
   name: "SlotList",
-  date() {
+  data() {
     return {
       slots: [],
     };

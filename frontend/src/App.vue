@@ -1,11 +1,26 @@
 <template>
   <v-app>
     <v-app-bar app color="blue lighten-5" dark>
-      <div>
-        <router-link to="/" class="ma-5">Home</router-link>
-        <router-link to="/about" class="mr-5">About</router-link>
-        <router-link to="/slot_list">Slot List</router-link>
-      </div>
+      <!-- <div>
+        
+      </div> -->
+
+      <v-row no-gutters class="d-flex justify-start align-center">
+        <v-col cols="3" class="yellow">
+          <v-row no-gutters>
+            <v-col class="d-flex justify-start" cols="2">
+              <router-link to="/" class="">Home</router-link>
+            </v-col>
+
+            <v-col class="d-flex justify-start" cols="2">
+              <router-link to="/about" class="">About</router-link></v-col
+            >
+            <v-col class="d-flex justify-start" cols="2">
+              <router-link to="/slot_list">Slot List</router-link>
+            </v-col>
+          </v-row>
+        </v-col>
+      </v-row>
     </v-app-bar>
 
     <v-main>
