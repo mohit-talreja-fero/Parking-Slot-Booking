@@ -1,4 +1,4 @@
-from rest_framework import viewsets, status, response, renderers
+from rest_framework import viewsets, status, response, renderers, mixins
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
@@ -25,8 +25,9 @@ class SpaceViewSet(viewsets.ModelViewSet):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-class SlotViewSet(viewsets.GenericViewSet):
+class SlotViewSet(viewsets.GenericViewSet, mixins.RetrieveModelMixin):
     queryset = models.Slot.objects.all()
+    serializer_class = serializers.SLotListSerializer
     # renderer_classes = [renderers.JSONRenderer, ]
 
     @action(methods=["PATCH"], detail=True)
