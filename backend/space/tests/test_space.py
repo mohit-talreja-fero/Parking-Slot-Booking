@@ -1,6 +1,6 @@
 from rest_framework import status, test
 from django.urls import reverse
-from space.models import Space
+from space.models import Space, Slot
 
 
 # class SlotBookTests(APITestCase):
@@ -52,9 +52,13 @@ class SpaceViewSetTest(test.APITestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_space_create_with_valid_data(self):
-        data = {"name": "Space-6", "total_slots": 2}
+        total_slots = 4
+        data = {"name": "Space-6", "total_slots": total_slots}
         count_before_create = Space.objects.count()
+
         response = self.client.post(self.base_url, data=data)
         count_after_create = Space.objects.count()
+
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(count_after_create, (count_before_create+1))
+
