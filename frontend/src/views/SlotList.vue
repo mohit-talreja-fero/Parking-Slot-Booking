@@ -5,16 +5,14 @@
     <v-container v-for="slot in slots" :key="slot.id">
       <Slot :is_available="slot.is_available" />
     </v-container>
-    <BookDialog />
   </div>
 </template>
 
 <script>
-import BookDialog from "@/components/BookDialog.vue";
 import Slot from "@/components/Slot.vue";
 export default {
   name: "SlotList",
-  components: { Slot, BookDialog },
+  components: { Slot },
   data() {
     return {
       slots: [],
