@@ -3,7 +3,7 @@
     <h1>Slot List Page</h1>
 
     <v-container v-for="slot in slots" :key="slot.id">
-      <Slot :is_available="slot.is_available" />
+      <Slot :is_available="slot.is_available" :slot_id="slot.id" />
     </v-container>
   </div>
 </template>
