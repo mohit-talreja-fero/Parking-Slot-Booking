@@ -10,3 +10,12 @@ class Account(models.Model):
     phone_number = models.CharField(max_length=20)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
+
+class NormalUser(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    has_premium = models.BooleanField(default=False)
+    premium_expiry = models.DateTimeField(null=True, blank=True)
+
+
+class CareTakerUser(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
