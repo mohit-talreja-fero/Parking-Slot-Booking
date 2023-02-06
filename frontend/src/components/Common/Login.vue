@@ -82,7 +82,7 @@ export default {
         })
         .then((res) => {
           localStorage.setItem("token", res.token);
-          this.$router.push({ name: "home" });
+          this.$router.push({ name: "space_list" });
         })
         .catch((err) => {
           this.showToast = true;

@@ -3,6 +3,7 @@ import VueRouter from "vue-router";
 import HomeView from "../views/HomeView.vue";
 import SlotList from "../views/SlotList.vue";
 import Login from "@/components/Common/Login.vue";
+import SpaceList from "@/views/SpaceList.vue";
 // import Registration from "@/components/Common/Registeration.vue";
 
 Vue.use(VueRouter);
@@ -22,6 +23,11 @@ const routes = [
     path: "/",
     name: "home",
     component: HomeView,
+  },
+  {
+    path: "/space_list",
+    name: "space_list",
+    component: SpaceList,
   },
   // {
   //   path: "/about",

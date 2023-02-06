@@ -25,6 +25,7 @@ THIRD_PARTY_APPS = [
     "rest_framework",
     "django_extensions",
     'rest_framework.authtoken',
+    # 'tellme',           # Django Feed back
 ]
 
 USER_APPS = [
@@ -49,8 +50,12 @@ MIDDLEWARE = [
 # Django Rest Framework Configuration
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
         'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.SessionAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
     ],
     'DEFAULT_RENDERER_CLASSES': [
         'rest_framework.renderers.JSONRenderer',
