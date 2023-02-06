@@ -24,10 +24,13 @@ THIRD_PARTY_APPS = [
     "corsheaders",
     "rest_framework",
     "django_extensions",
+    'rest_framework.authtoken',
+    # 'tellme',           # Django Feed back
 ]
 
 USER_APPS = [
     "space",
+    "account_management",
 ]
 
 INSTALLED_APPS.extend(THIRD_PARTY_APPS)
@@ -44,8 +47,23 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'backend.urls'
+# Django Rest Framework Configuration
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
+    ]
+}
 
+ROOT_URLCONF = 'backend.urls'
 
 # CORS configuration
 CORS_ALLOW_ALL_ORIGINS = True
