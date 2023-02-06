@@ -17,6 +17,7 @@ export default (axios) => ({
         });
     });
   },
+  profile() {},
   register() {
     return new Promise((resolve, reject) => {
       axios
