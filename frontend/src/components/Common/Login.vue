@@ -82,9 +82,16 @@ export default {
         })
         .then((res) => {
           localStorage.setItem("token", res.token);
-          this.$router.push({ name: "space_list" });
+          localStorage.setItem("user_type", res.user_type);
+          let user_type = res.user_type;
+          if (user_type == "NORMAL") {
+            this.$router.push({ name: "admin_app_bar" });
+          } else {
+            this.$router.push({ name: "space_list" });
+          }
         })
         .catch((err) => {
+          console.log("BBBBL ", err);
           this.showToast = true;
           this.non_field_errors = err.errors;
         });
