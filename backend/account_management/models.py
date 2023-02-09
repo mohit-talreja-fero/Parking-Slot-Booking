@@ -19,3 +19,13 @@ class NormalUser(models.Model):
 
 class CareTakerUser(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+
+
+class Membership(models.Model):
+    account = models.ForeignKey(Account, on_delete=models.CASCADE)
+    start_time = models.DateTimeField()
+    end_time = models.DateTimeField()
+    premium_type = models.CharField(max_length=16, default="PREM")
+
+    def __str__(self):
+        return f"MEM-{self.account.user.username} - {self.start_time}"
