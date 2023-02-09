@@ -23,6 +23,7 @@ class NormalUserLoginSerializer(serializers.Serializer):
 
         token = utils.generate_user_token(user=user)
         attrs["token"] = token
+        attrs["user_type"] = constants.AccountType.NORMAL
         return super(NormalUserLoginSerializer, self).validate(attrs=attrs)
 
 

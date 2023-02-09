@@ -27,11 +27,12 @@ axiosObj.interceptors.response.use(
     return config;
   },
   (error) => {
-    console.log(error.response);
+    // Invalid Token redirect to login
     if (error.response.status == 401) {
+      // Vue.prototype.router.push({ name: "login" });
       router.push({ name: "login" });
     }
-    return error;
+    return Promise.reject(error); // Require to forceful reject as per Axios Documentation
   }
 );
 
