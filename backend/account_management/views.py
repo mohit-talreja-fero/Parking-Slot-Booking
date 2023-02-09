@@ -11,7 +11,8 @@ class LoginView(views.APIView):
 
     def post(self, request, *args, **kwargs):
         data = request.data
-        serializer = serializers.NormalUserLoginSerializer(data=data)
+        # serializer = serializers.NormalUserLoginSerializer(data=data)
+        serializer = serializers.AccountLoginSerializer(data=data)
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

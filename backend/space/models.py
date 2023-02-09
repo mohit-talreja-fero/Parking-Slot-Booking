@@ -1,4 +1,5 @@
 from django.db import models
+from account_management.models import NormalUser
 
 
 class Space(models.Model):
