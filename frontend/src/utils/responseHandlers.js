@@ -1,17 +1,17 @@
 export function handleSuccessResponse(res) {
   let obj = {};
-  // console.log(res.data);
   if (Array.isArray(res.data)) {
-    obj = res.data;
-  } else {
     obj = res.data.data;
+    // console.log("is array");
+  } else {
+    obj = res.data;
+    // console.log("is not array");
   }
-  // console.log(obj);
   return obj;
 }
 
 export function handleErrorResponse(err) {
   let obj = {};
-  console.error(err);
+  obj.errors = err.response.data;
   return obj;
 }
