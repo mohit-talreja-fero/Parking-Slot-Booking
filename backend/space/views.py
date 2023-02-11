@@ -1,8 +1,10 @@
+from django.db.models import Count, Q, Case, When
 from rest_framework import viewsets, status, response, renderers, mixins
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from django_filters.rest_framework import DjangoFilterBackend
 
-from space import serializers, models
+from space import serializers, models, filters
 
 
 class SpaceViewSet(viewsets.ModelViewSet):
@@ -28,7 +30,6 @@ class SpaceViewSet(viewsets.ModelViewSet):
 class SlotViewSet(viewsets.GenericViewSet, mixins.RetrieveModelMixin):
     queryset = models.Slot.objects.all()
     serializer_class = serializers.SLotListSerializer
-    # renderer_classes = [renderers.JSONRenderer, ]
 
     @action(methods=["PATCH"], detail=True)
     def book_my_slot(self, request, *args, **kwargs):
@@ -41,3 +42,21 @@ class SlotViewSet(viewsets.GenericViewSet, mixins.RetrieveModelMixin):
         serializer.save()
         msg = "Successfully Booked Slot!"
         return response.Response({"message": msg}, status=status.HTTP_200_OK)
+
+    @action(methods=["GET"], detail=False)
+    def show_available_slots(self, request, *args, **kwargs):
+        start_time = request.query_params.get("start_time")
+        end_time = request.query_params.get("end_time")
+        if not (start_time and end_time):
+            return Response("Please Provide Start Time and End Time")
+
+        slots = models.Slot.objects.prefetch_related(
+            "slot_bookings").annotate(
+            availability=Case(When(
+                Q(slot_bookings__start_time__gte=start_time) &
+                Q(slot_bookings__end_time__lte=end_time),
+                then=False
+            ), default=True)
+        )
+        serializer = serializers.SlotAvailabilitySerializer(slots, many=True)
+        return Response(serializer.data)

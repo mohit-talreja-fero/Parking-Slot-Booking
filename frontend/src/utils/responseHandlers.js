@@ -1,12 +1,5 @@
 export function handleSuccessResponse(res) {
-  let obj = {};
-  if (Array.isArray(res.data)) {
-    obj = res.data.data;
-    // console.log("is array");
-  } else {
-    obj = res.data;
-    // console.log("is not array");
-  }
+  let obj = res.data;
   return obj;
 }
 

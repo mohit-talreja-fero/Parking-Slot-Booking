@@ -29,4 +29,16 @@ export default (axios) => ({
         });
     });
   },
+  showAvailableSlots(params) {
+    return new Promise((resolve, reject) => {
+      axios
+        .get(slot.show_available_slots, params)
+        .then((res) => {
+          resolve(handleSuccessResponse(res));
+        })
+        .catch((err) => {
+          reject(handleErrorResponse(err));
+        });
+    });
+  },
 });

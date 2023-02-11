@@ -3,9 +3,10 @@ import VueRouter from "vue-router";
 import HomeView from "../views/HomeView.vue";
 import SlotList from "../views/SlotList.vue";
 import Login from "@/components/Common/Login.vue";
-import BookSlot from "@/views/BookSlot";
+// import BookSlot from "@/views/BookSlot";
 import SpaceList from "@/views/SpaceList.vue";
 import PageNotFound from "@/components/Common/PageNotFound";
+import BookingPage from "@/views/BookingPage";
 
 // import Registration from "@/components/Common/Registeration.vue";
 
@@ -26,13 +27,13 @@ const routes = [
     path: "/",
     name: "home",
     component: HomeView,
-    children: [
-      {
-        path: "book/",
-        name: "book",
-        component: BookSlot,
-      },
-    ],
+    // children: [
+    //   {
+    //     path: "book/",
+    //     name: "book",
+    //     component: BookSlot,
+    //   },
+    // ],
   },
   {
     path: "/space_list",
@@ -43,6 +44,11 @@ const routes = [
     path: "/slot_list",
     name: "slot_list",
     component: SlotList,
+  },
+  {
+    path: "/book",
+    name: "BookingPage",
+    component: BookingPage,
   },
   {
     path: "/:pathMatch(.*)*",

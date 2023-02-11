@@ -62,7 +62,16 @@ class SLotListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Slot
-        fields = ("id", "space_id", "space_name", "is_available")
+        fields = ("id", "space_id", "space_name")
+
+
+class SlotAvailabilitySerializer(SLotListSerializer):
+    availability = serializers.BooleanField()
+
+    class Meta:
+        model = Slot
+        fields = ("id", "availability")
+
 
 
 class BookSlotSerializer(serializers.ModelSerializer):
