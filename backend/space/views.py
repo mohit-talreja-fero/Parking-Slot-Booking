@@ -35,7 +35,8 @@ class SlotViewSet(viewsets.GenericViewSet, mixins.RetrieveModelMixin):
     def book_my_slot(self, request, *args, **kwargs):
         data = request.data
         slot = self.get_object()
-        serializer = serializers.BookSlotSerializer(instance=slot, data=data)
+        context = super(SlotViewSet, self).get_serializer_context()
+        serializer = serializers.BookSlotSerializer(instance=slot, data=data, context=context)
         if not serializer.is_valid():
             return response.Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -48,7 +49,10 @@ class SlotViewSet(viewsets.GenericViewSet, mixins.RetrieveModelMixin):
         start_time = request.query_params.get("start_time")
         end_time = request.query_params.get("end_time")
         if not (start_time and end_time):
-            return Response("Please Provide Start Time and End Time")
+            return Response("Please Provide Start Time and End Time", status=status.HTTP_400_BAD_REQUEST)
+
+        if start_time >= end_time:
+            return Response("Start Time should be less than End Time", status=status.HTTP_400_BAD_REQUEST)
 
         slots = models.Slot.objects.prefetch_related(
             "slot_bookings").annotate(
@@ -57,6 +61,6 @@ class SlotViewSet(viewsets.GenericViewSet, mixins.RetrieveModelMixin):
                 Q(slot_bookings__end_time__lte=end_time),
                 then=False
             ), default=True)
-        )
+        ).distinct()
         serializer = serializers.SlotAvailabilitySerializer(slots, many=True)
         return Response(serializer.data)

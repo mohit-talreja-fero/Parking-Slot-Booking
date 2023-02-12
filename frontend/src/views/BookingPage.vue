@@ -1,33 +1,9 @@
 <template>
   <div>
+    <h1 v-if="isBookedSuccessfully">Booked Successfully!</h1>
+    <h2 v-if="isBookedSuccessfully">Redirecting to home page ...</h2>
     <h1 class="ma-5">Booking Date: {{ date }}</h1>
-    <!-- <v-menu
-      ref="menu"
-      v-model="date_menu"
-      :close-on-content-click="false"
-      :nudge-right="40"
-      :return-value.sync="date"
-      transition="scale-transition"
-      offset-y
-      max-width="290px"
-      min-width="290px"
-      outline
-    >
-      <template v-slot:activator="{ on, attrs }">
-        <v-text-field
-          max-width="290px"
-          min-width="290px"
-          v-model="date"
-          prepend-icon="mdi-calendar-check"
-          readonly
-          v-bind="attrs"
-          v-on="on"
-        ></v-text-field>
-      </template>
-      <v-row justify="center">
-        <v-date-picker v-model="date"></v-date-picker>
-      </v-row>
-    </v-menu> -->
+    <!-- Date Picker -->
     <v-menu
       v-model="date_menu"
       :close-on-content-click="false"
@@ -49,7 +25,7 @@
       <v-date-picker v-model="date" @input="date_menu = false"></v-date-picker>
     </v-menu>
 
-    <!-- Start and End Time -->
+    <!-- Start and End Time pickers -->
     <v-row>
       <v-menu
         ref="menu2"
@@ -116,17 +92,49 @@
         ></v-time-picker>
       </v-menu>
     </v-row>
+
     <v-btn
       color="blue"
       :disabled="!(start_time && end_time)"
       @click="checkSlotAvailability"
       >Check Slot Availability</v-btn
     >
+
+    <!-- Slot Listing -->
+    <div v-if="slots.length > 0" class="ma-5">
+      <v-row>
+        <v-card
+          v-for="slot in slots"
+          :key="slot.id"
+          class="ma-5"
+          :class="slot.availability ? `light-blue` : `red`"
+          max-width="210"
+          max-height="250"
+          border="right"
+          dark
+        >
+          <v-card-title>
+            <span class="text-h6 font-weight">Slot ID: {{ slot.id }}</span>
+          </v-card-title>
+
+          <v-card-text class="blue--text" v-if="slot.availability">
+            <v-btn @click="bookSlot(slot.id)">Book Slot</v-btn>
+          </v-card-text>
+          <v-card-text class="white--text" v-else>
+            <span>Slot Not Available</span>
+          </v-card-text>
+        </v-card>
+      </v-row>
+    </div>
   </div>
 </template>
 
 <script>
-import { getToday } from "@/utils/functions";
+import {
+  getToday,
+  dateTimeConstructor,
+  waitForNSeconds,
+} from "@/utils/functions";
 export default {
   name: "BookingPage",
   data() {
@@ -140,6 +148,10 @@ export default {
       time: null,
       menu2: false,
       modal2: false,
+      slots: [],
+      isBookedSuccessfully: false,
+      error: [],
+      showError: false,
     };
   },
   methods: {
@@ -147,16 +159,36 @@ export default {
       await this.$api.slot
         .showAvailableSlots({
           params: {
-            start_time: `${this.date} ${this.start_time}`,
-            end_time: `${this.date} ${this.start_time}`,
-
-            // example
-            // start_time: "2023-01-26 13:59",
-            // end_time: "2023-01-27 22:00",
+            start_time: dateTimeConstructor(this.date, this.start_time),
+            end_time: dateTimeConstructor(this.date, this.end_time),
           },
         })
-        .then((res) => console.log(res))
+        .then((res) => {
+          this.slots = res;
+        })
         .catch((err) => console.log(err));
+    },
+    bookSlot(id) {
+      if (this.start_time >= this.end_time) {
+        this.showError = true;
+        return;
+      }
+      this.$api.slot
+        .bookMySlot(id, {
+          start_time: dateTimeConstructor(this.date, this.start_time),
+          end_time: dateTimeConstructor(this.date, this.end_time),
+        })
+        .then(async () => {
+          this.isBookedSuccessfully = true;
+          await waitForNSeconds(3);
+          this.$router.push({ name: "home" });
+        })
+        .catch((err) => {
+          console.log("YAHA TAK PAHUCHA HI NAI!");
+          this.error = err.errors;
+          console.log("ERROR -> ", this.error);
+          this.showError = true;
+        });
     },
   },
 };

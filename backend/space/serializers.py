@@ -70,8 +70,7 @@ class SlotAvailabilitySerializer(SLotListSerializer):
 
     class Meta:
         model = Slot
-        fields = ("id", "availability")
-
+        fields = ("id", "availability",)
 
 
 class BookSlotSerializer(serializers.ModelSerializer):
@@ -79,38 +78,31 @@ class BookSlotSerializer(serializers.ModelSerializer):
         format=constants.GeneralConstants.DATE_TIME_FORMAT, write_only=True, required=True)
     end_time = serializers.DateTimeField(
         format=constants.GeneralConstants.DATE_TIME_FORMAT, write_only=True, required=True)
-    payment = serializers.IntegerField(min_value=1, required=True, write_only=True)
-    duration = serializers.IntegerField(required=False, write_only=True)
 
     class Meta:
         model = Slot
-        fields = ("id", "start_time", "end_time", "payment", "duration",)
+        fields = ("id", "start_time", "end_time",)
 
-    def validate_start_time(self, start_time):
-        if start_time < timezone.now():
-            raise serializers.ValidationError("Past date mat bhej bhai samaj nahi aata kya")
-
-        time_difference = start_time - timezone.now()
-        if time_difference.days != 1:
-            raise serializers.ValidationError("Slot should be booked 24 Hrs prior")
-        return start_time
+    # def validate_start_time(self, start_time):        # Disable for Urgent booking
+    #     time_difference = start_time - timezone.now()
+    #     if time_difference.days != 1:
+    #         raise serializers.ValidationError("Slot should be booked 24 Hrs prior")
+    #     return start_time
 
     def validate(self, attrs):
-        slot = self.instance
-
         start_time = attrs.get("start_time")
         end_time = attrs.get("end_time")
         duration = attrs.get("duration")  # Calculate on frontend to display user
         payment = attrs.get("payment")
 
-        if start_time >= end_time:
-            raise serializers.ValidationError("End Time should be greater than Start Time")
+        # if start_time >= end_time:      # Move this logic to Slot Availability checker
+        #     raise serializers.ValidationError("End Time should be greater than Start Time")
 
         if not duration:
             duration = end_time - start_time
 
-        if not slot.is_available:
-            raise serializers.ValidationError({"id": f"Slot is not available"})
+        # if not slot.is_available:       # Move this logic to Slot Availability checker
+        #     raise serializers.ValidationError({"id": f"Slot is not available"})
 
         attrs["is_available"] = False
         return attrs
