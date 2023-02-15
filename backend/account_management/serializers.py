@@ -42,7 +42,7 @@ class NormalUserProfileSerializer(serializers.ModelSerializer):
 
 
 
-class AccountLoginSerializer(serializers.ModelSerializer):
+class AccountLoginSerializer(serializers.Serializer):
     username = serializers.CharField(required=True, allow_null=False, allow_blank=False)
     password = serializers.CharField(required=True, allow_null=False, allow_blank=False, write_only=True)
 
@@ -54,7 +54,7 @@ class AccountLoginSerializer(serializers.ModelSerializer):
             account = models.Account.objects.get(user__username=username)
             user = account.user
 
-        except User.DoesNotExist:
+        except models.Account.DoesNotExist:
             raise serializers.ValidationError("Invalid Credentials")
 
         if not user.check_password(raw_password=password):
