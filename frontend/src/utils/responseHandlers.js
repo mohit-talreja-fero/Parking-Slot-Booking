@@ -4,7 +4,8 @@ export function handleSuccessResponse(res) {
 }
 
 export function handleErrorResponse(err) {
+  console.log(err.response.data);
   let obj = {};
-  obj.errors = err.response.data;
+  obj = err.response.data.errors;
   return obj;
 }

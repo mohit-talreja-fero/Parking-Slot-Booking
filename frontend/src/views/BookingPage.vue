@@ -47,6 +47,7 @@
             v-bind="attrs"
             v-on="on"
             class="mx-3"
+            :error-messages="error.start_time"
           ></v-text-field>
         </template>
         <v-time-picker
@@ -70,6 +71,7 @@
         offset-y
         max-width="290px"
         min-width="290px"
+        :error-messages="error.end_time"
         outline
       >
         <template v-slot:activator="{ on, attrs }">
@@ -95,6 +97,7 @@
 
     <v-btn
       color="blue"
+      class="mt-5"
       :disabled="!(start_time && end_time)"
       @click="checkSlotAvailability"
       >Check Slot Availability</v-btn
@@ -166,7 +169,9 @@ export default {
         .then((res) => {
           this.slots = res;
         })
-        .catch((err) => console.log(err));
+        .catch((err) => {
+          this.error = err;
+        });
     },
     bookSlot(id) {
       if (this.start_time >= this.end_time) {
@@ -184,9 +189,7 @@ export default {
           this.$router.push({ name: "home" });
         })
         .catch((err) => {
-          console.log("YAHA TAK PAHUCHA HI NAI!");
           this.error = err.errors;
-          console.log("ERROR -> ", this.error);
           this.showError = true;
         });
     },
