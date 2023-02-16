@@ -48,6 +48,7 @@
             v-on="on"
             class="mx-3"
             :error-messages="error.start_time"
+            @input="error && error.start_time ? delete error.start_time : ''"
           ></v-text-field>
         </template>
         <v-time-picker
@@ -57,6 +58,7 @@
           @click:minute="$refs.menu2.save(start_time)"
           format="24hr"
           :max="end_time"
+          @change="error && error.start_time ? delete error.start_time : ''"
         ></v-time-picker>
       </v-menu>
 

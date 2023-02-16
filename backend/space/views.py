@@ -49,10 +49,14 @@ class SlotViewSet(viewsets.GenericViewSet, mixins.RetrieveModelMixin):
         start_time = request.query_params.get("start_time")
         end_time = request.query_params.get("end_time")
         if not (start_time and end_time):
-            return Response("Please Provide Start Time and End Time", status=status.HTTP_400_BAD_REQUEST)
+            return Response({
+                "non_field_errors": "Please Provide Start Time and End Time"
+            }, status=status.HTTP_400_BAD_REQUEST)
 
         if start_time >= end_time:
-            return Response("Start Time should be less than End Time", status=status.HTTP_400_BAD_REQUEST)
+            return Response({"errors": {
+                "start_time": "Start Time should be less than End Time"
+            }}, status=status.HTTP_400_BAD_REQUEST)
 
         slots = models.Slot.objects.prefetch_related(
             "slot_bookings").annotate(
