@@ -1,4 +1,4 @@
-import AdminDashboard from "@/views/HomeView.vue";
+import AdminDashboard from "@/views/admin/HomeView.vue";
 
 export const admin = [
   {
