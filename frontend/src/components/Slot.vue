@@ -9,25 +9,25 @@
         <h1 x-large color="red" v-if="is_available">Not Available</h1>
         <h1 x-large color="green" v-else>Available</h1>
       </v-flex>
-      <v-flex class="light-green d-flex justify-center" md4>
+      <!-- <v-flex class="light-green d-flex justify-center" md4>
         <BookDialog
           :slot_id="slot_id"
           class="my-3"
           :is_available="is_available"
         />
-      </v-flex>
+      </v-flex> -->
     </v-layout>
   </div>
 </template>
 
 <script>
-import BookDialog from "@/components/BookDialog.vue";
+// import BookDialog from "@/components/BookDialog.vue";
 
 export default {
   name: "Slot",
   props: ["is_available", "slot_id"],
   components: {
-    BookDialog,
+    // BookDialog,
   },
   data() {
     return {

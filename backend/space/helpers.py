@@ -43,4 +43,4 @@ def get_duration_and_payment_for_start_and_end_time(start_time=None, end_time=No
         return duration, hours
     duration = calculate_duration_hours(start_time=start_time, end_time=end_time)
     payment = calculate_payment_charge(hours=duration)
-    return duration, hours
+    return duration, payment

@@ -1,4 +1,4 @@
-import { slot } from "@/utils/constant";
+import { slot, slotBase } from "@/utils/constant";
 import {
   handleErrorResponse,
   handleSuccessResponse,
@@ -29,4 +29,29 @@ export default (axios) => ({
         });
     });
   },
+  showAvailableSlots(params) {
+    return new Promise((resolve, reject) => {
+      axios
+        .get(slot.show_available_slots, params)
+        .then((res) => {
+          resolve(handleSuccessResponse(res));
+        })
+        .catch((err) => {
+          reject(handleErrorResponse(err));
+        });
+    });
+  },
+  bookMySlot(id, params) {
+    return new Promise((resolve, reject) => {
+      axios
+        .patch(`${slotBase}/${id}/book_my_slot/`, params)
+        .then((res) => {
+          resolve(handleSuccessResponse(res));
+        })
+        .catch((err) => {
+          reject(handleErrorResponse(err));
+        });
+    });
+  },
 });
+//

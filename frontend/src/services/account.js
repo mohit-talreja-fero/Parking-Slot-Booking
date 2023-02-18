@@ -17,6 +17,18 @@ export default (axios) => ({
         });
     });
   },
+  logout(payload) {
+    return new Promise((resolve, reject) => {
+      axios
+        .post(account.logout, payload)
+        .then((res) => {
+          resolve(handleSuccessResponse(res));
+        })
+        .catch((err) => {
+          reject(handleErrorResponse(err));
+        });
+    });
+  },
   profile() {},
   register() {
     return new Promise((resolve, reject) => {

@@ -1,48 +1,36 @@
-import Vue from "vue";
 import VueRouter from "vue-router";
-import HomeView from "../views/HomeView.vue";
-import SlotList from "../views/SlotList.vue";
-import Login from "@/components/Common/Login.vue";
-import BookSlot from "@/views/BookSlot";
-import SpaceList from "@/views/SpaceList.vue";
+import Login from "@/views/login/Login.vue";
+import Default from "@/layout/Default.vue";
 import PageNotFound from "@/components/Common/PageNotFound";
-
-// import Registration from "@/components/Common/Registeration.vue";
-
-Vue.use(VueRouter);
+import HomeView from "../views/admin/HomeView.vue";
+import BookingPage from "@/views/admin/BookingPage";
 
 const routes = [
   {
-    path: "/login",
+    path: "/",
     name: "login",
     component: Login,
   },
-  // {
-  //   path: "/register",
-  //   name: "register",
-  //   component: Registration,
-  // },
   {
-    path: "/",
-    name: "home",
-    component: HomeView,
+    path: "/app",
+    component: Default,
     children: [
       {
-        path: "book/",
-        name: "book",
-        component: BookSlot,
+        path: "",
+        name: "home",
+        component: HomeView,
+      },
+      {
+        path: "home",
+        name: "home",
+        component: HomeView,
+      },
+      {
+        path: "book",
+        name: "BookingPage",
+        component: BookingPage,
       },
     ],
-  },
-  {
-    path: "/space_list",
-    name: "space_list",
-    component: SpaceList,
-  },
-  {
-    path: "/slot_list",
-    name: "slot_list",
-    component: SlotList,
   },
   {
     path: "/:pathMatch(.*)*",
