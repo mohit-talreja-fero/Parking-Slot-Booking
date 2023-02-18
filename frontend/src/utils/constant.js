@@ -1,4 +1,5 @@
 export const slotBase = "/parking/slot";
+export const accountBase = "account";
 
 export const space = {
   base: "/parking/space",
@@ -11,6 +12,7 @@ export const slot = {
 };
 
 export const account = {
-  login: "account/login/",
+  login: `${accountBase}/login/`,
+  logout: `${accountBase}/logout/`,
   register: "/",
 };
