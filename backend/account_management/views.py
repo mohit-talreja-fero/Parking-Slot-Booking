@@ -21,6 +21,13 @@ class LoginView(views.APIView):
             status=status.HTTP_200_OK)
 
 
+class LogoutView(views.APIView):
+    def post(self, request, *args, **kwargs):
+        user = request.user
+        Token.objects.filter(user=user).delete()
+        return Response({"message": "Log out successfully"}, status=status.HTTP_205_RESET_CONTENT)
+
+
 class NormalUserProfileView(generics.RetrieveUpdateAPIView):
     serializer_class = serializers.NormalUserProfileSerializer
     queryset = models.NormalUser
