@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
+from django.utils import timezone
 
 from account_management import utils, models
 from lib import constants
@@ -32,7 +33,7 @@ class NormalUserProfileSerializer(serializers.ModelSerializer):
     last_name = serializers.CharField(source="user.last_name")
     username = serializers.CharField(source="user.username")
     premium_expiry = serializers.DateTimeField(
-        format=constants.GeneralConstants.DATE_TIME_FORMAT)
+        format=constants.GeneralConstants.DATE_TIME_FORMAT, allow_null=True)
 
     class Meta:
         model = models.NormalUser
@@ -40,6 +41,25 @@ class NormalUserProfileSerializer(serializers.ModelSerializer):
             "first_name", "last_name", "username", "has_premium", "premium_expiry",
         )
 
+    def validate_username(self, username):
+        if User.objects.filter(username__iexact=username).exists():
+            raise serializers.ValidationError(f"User with username {username} is already registered."
+                                              f"Please choose different username")
+        return username
+
+    def validate(self, attrs):
+        premium_expiry = attrs.get("premium_expiry", None)
+        if premium_expiry and premium_expiry <= timezone.now():
+            raise serializers.ValidationError({"premium_expiry": "Premium Expiry cannot be in Past"})
+
+        attrs["has_premium"] = True
+        return super(NormalUserProfileSerializer, self).validate(attrs=attrs)
+
+    def create(self, validated_data):
+        user = validated_data.pop("user")
+        user = User.objects.create(**user)
+        validated_data["user"] = user
+        return super(NormalUserProfileSerializer, self).create(validated_data=validated_data)
 
 
 class AccountLoginSerializer(serializers.Serializer):
@@ -64,7 +84,6 @@ class AccountLoginSerializer(serializers.Serializer):
         attrs["token"] = token
         attrs["user_type"] = constants.AccountType.NORMAL
         return super(AccountLoginSerializer, self).validate(attrs=attrs)
-
 
 
 class AccountDetailSerializer(serializers.ModelSerializer):

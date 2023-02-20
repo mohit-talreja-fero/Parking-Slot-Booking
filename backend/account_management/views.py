@@ -1,4 +1,4 @@
-from rest_framework import views, status, generics, permissions, authentication
+from rest_framework import views, status, generics, permissions, authentication, mixins
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
@@ -32,6 +32,12 @@ class NormalUserProfileView(generics.RetrieveUpdateAPIView):
     serializer_class = serializers.NormalUserProfileSerializer
     queryset = models.NormalUser
 
+
+class NormalUserProfileCreateView(generics.CreateAPIView):
+    serializer_class = serializers.NormalUserProfileSerializer
+    queryset = models.NormalUser
+    authentication_classes = []
+    permission_classes = (permissions.AllowAny,)
 
 class ProfileDetailView(views.APIView):
     permission_classes = [permissions.AllowAny,]
