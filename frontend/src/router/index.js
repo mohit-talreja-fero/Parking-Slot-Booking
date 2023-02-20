@@ -7,7 +7,7 @@ import BookingPage from "@/views/admin/BookingPage";
 
 const routes = [
   {
-    path: "/",
+    path: "/login",
     name: "login",
     component: Login,
   },
@@ -17,11 +17,6 @@ const routes = [
     children: [
       {
         path: "",
-        name: "home",
-        component: HomeView,
-      },
-      {
-        path: "home",
         name: "home",
         component: HomeView,
       },
