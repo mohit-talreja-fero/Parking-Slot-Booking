@@ -6,7 +6,7 @@
           <v-flex xs12 sm8 md4>
             <v-card class="elevation-12">
               <v-toolbar dark color="primary">
-                <v-toolbar-title>Login form</v-toolbar-title>
+                <v-toolbar-title>Registration form</v-toolbar-title>
               </v-toolbar>
               <v-card-text>
                 <div v-for="err in non_field_errors" :key="err.id">
@@ -20,9 +20,32 @@
                     >
                   </v-alert>
                 </div>
-                <form ref="form" @submit.prevent="login()">
+                <form
+                  class="px-3 py-4"
+                  ref="form"
+                  @submit.prevent="redirectToHome()"
+                >
+                  <v-text-field
+                    v-model="first_name"
+                    name="first_name"
+                    label="First Name"
+                    type="text"
+                    :error-messages="error && error.first_name"
+                    placeholder="First Name"
+                    required
+                  ></v-text-field>
+                  <v-text-field
+                    v-model="last_name"
+                    name="last_name"
+                    :error-messages="error && error.last_name"
+                    label="Last Name"
+                    type="text"
+                    placeholder="Last Name"
+                    required
+                  ></v-text-field>
                   <v-text-field
                     v-model="username"
+                    :error-messages="error && error.username"
                     name="username"
                     label="Username"
                     type="text"
@@ -38,22 +61,30 @@
                     placeholder="password"
                     required
                   ></v-text-field>
-                  <v-row class="ma-3"
+
+                  <v-checkbox
+                    v-model="has_premium"
+                    label="Activate Premium member ship ?"
+                  ></v-checkbox>
+
+                  <v-row class="mt-3"
                     ><v-btn
                       type="submit"
-                      class="mt-4 mr-5"
+                      class="mt-4"
                       color="primary"
                       value="log in"
-                      >Login</v-btn
+                      @click="register"
+                      :disabled="!(first_name && last_name && username)"
+                      >Register</v-btn
                     >
                     <v-spacer></v-spacer>
                     <v-btn
                       type="submit"
-                      class="mt-4"
+                      class="mt-4 mr-5"
                       color="white blue--text"
                       value="log in"
-                      @click="redirectToRegister()"
-                      >Register</v-btn
+                      @click="redirectToLogin()"
+                      >Go to Login Page</v-btn
                     ></v-row
                   >
                 </form>
@@ -68,33 +99,42 @@
 
 <script>
 export default {
-  name: "Login",
+  name: "App",
   data() {
     return {
       username: "",
+      first_name: "",
+      last_name: "",
       password: "",
-      showToast: true,
+      has_premium: false,
       non_field_errors: [],
+      error: "",
     };
   },
   methods: {
-    async login() {
+    redirectToHome() {
+      const { username } = this;
+      console.log(username + "logged in");
+    },
+    redirectToLogin() {
+      this.$router.push("/login");
+    },
+    async register() {
       await this.$api.account
-        .login({
+        .register({
+          first_name: this.first_name,
+          last_name: this.last_name,
           username: this.username,
           password: this.password,
+          has_premium: this.has_premium,
         })
         .then((res) => {
-          localStorage.setItem("token", res.token);
+          console.log(res);
           this.$router.push("/home");
         })
         .catch((err) => {
-          this.showToast = true;
-          this.non_field_errors = err.errors;
+          this.error = err;
         });
-    },
-    redirectToRegister() {
-      this.$router.push("/register");
     },
   },
 };

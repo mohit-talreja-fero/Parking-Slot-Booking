@@ -1,31 +1,27 @@
-from rest_framework import views, status, generics, permissions, authentication, mixins
-from rest_framework.authentication import TokenAuthentication
+from rest_framework import views, status, generics, permissions
+from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from account_management import serializers, utils, models
 
 
-class LoginView(views.APIView):
-    authentication_classes = ()
-    permission_classes = (permissions.AllowAny,)
+class LoginView(ObtainAuthToken):
 
     def post(self, request, *args, **kwargs):
-        data = request.data
-        # serializer = serializers.NormalUserLoginSerializer(data=data)
-        serializer = serializers.AccountLoginSerializer(data=data)
-        if not serializer.is_valid():
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-        return Response({
-            "message": "Logged In Successfully!", **serializer.validated_data},
-            status=status.HTTP_200_OK)
+        serializer = self.serializer_class(
+            data=request.data, context={'request': request})
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data['user']
+        token, created = Token.objects.get_or_create(user=user)
+        data = {"token": token.key}
+        return Response(data=data, status=status.HTTP_200_OK)
 
 
 class LogoutView(views.APIView):
     def post(self, request, *args, **kwargs):
         user = request.user
-        Token.objects.filter(user=user).delete()
-        return Response({"message": "Log out successfully"}, status=status.HTTP_205_RESET_CONTENT)
+        user.auth_token.delete()
+        return Response(status=status.HTTP_205_RESET_CONTENT)
 
 
 class NormalUserProfileView(generics.RetrieveUpdateAPIView):
@@ -33,16 +29,8 @@ class NormalUserProfileView(generics.RetrieveUpdateAPIView):
     queryset = models.NormalUser
 
 
-class NormalUserProfileCreateView(generics.CreateAPIView):
+class RegisterNormalUserProfileView(generics.CreateAPIView):
     serializer_class = serializers.NormalUserProfileSerializer
     queryset = models.NormalUser
     authentication_classes = []
     permission_classes = (permissions.AllowAny,)
-
-class ProfileDetailView(views.APIView):
-    permission_classes = [permissions.AllowAny,]
-    authentication_classes = []
-
-    def get(self, request, *args, **kwargs):
-        user = request.user
-        return Response({"wow": "wow", }, status=200)

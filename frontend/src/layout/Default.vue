@@ -3,14 +3,8 @@
     <v-app-bar app color="blue lighten-5" class="mb-5" dark>
       <v-row no-gutters class="d-flex justify-start align-center">
         <v-img :src="imgPath" max-height="230" max-width="180"></v-img>
-        <v-btn
-          to="/space_list"
-          class="mx-4 blue lighten-5 text-color blue--text"
-          >Spaces</v-btn
-        >
-        <v-btn to="/slot_list" class="mx-4 blue lighten-5 text-color blue--text"
-          >Slots</v-btn
-        >
+        <v-btn class="mx-4 blue lighten-5 text-color blue--text">Spaces</v-btn>
+        <v-btn class="mx-4 blue lighten-5 text-color blue--text">Slots</v-btn>
         <v-btn to="/book" class="mx-4 blue lighten-5 text-color blue--text"
           >Book My Slot</v-btn
         >

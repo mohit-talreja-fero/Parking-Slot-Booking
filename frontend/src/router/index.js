@@ -8,7 +8,7 @@ import Register from "@/views/admin/Register";
 
 const routes = [
   {
-    path: "/",
+    path: "/login",
     name: "login",
     component: Login,
   },
@@ -18,19 +18,14 @@ const routes = [
     component: Register,
   },
   {
-    path: "/app",
+    path: "",
     component: Default,
     children: [
       {
-        path: "",
+        path: "home",
         name: "home",
         component: HomeView,
       },
-      // {
-      //   path: "home",
-      //   name: "home",
-      //   component: HomeView,
-      // },
       {
         path: "book",
         name: "BookingPage",
