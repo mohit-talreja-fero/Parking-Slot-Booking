@@ -1,5 +1,5 @@
 from django.db import models
-from account_management.models import NormalUser
+from account_management.models import Account
 
 
 class Space(models.Model):
@@ -45,3 +45,5 @@ class SlotBook(models.Model):
     start_time = models.DateTimeField(auto_now_add=True)
     end_time = models.DateTimeField(null=True, blank=True)
     payment = models.PositiveIntegerField(default=0)
+    booked_by = models.ForeignKey(
+        Account, related_name="slot_bookings", on_delete=models.SET_NULL, null=True, blank=True)
