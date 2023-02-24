@@ -30,10 +30,10 @@ export default (axios) => ({
     });
   },
   profile() {},
-  register() {
+  register(payload) {
     return new Promise((resolve, reject) => {
       axios
-        .get(account.register)
+        .post(account.register, payload)
         .then((res) => {
           resolve(handleSuccessResponse(res));
         })

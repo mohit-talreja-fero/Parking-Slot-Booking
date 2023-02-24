@@ -6,6 +6,6 @@ export function handleSuccessResponse(res) {
 export function handleErrorResponse(err) {
   console.log(err.response.data);
   let obj = {};
-  obj = err.response.data.errors;
+  obj = err.response.data;
   return obj;
 }

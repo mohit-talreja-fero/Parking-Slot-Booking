@@ -14,5 +14,5 @@ export const slot = {
 export const account = {
   login: `${accountBase}/login/`,
   logout: `${accountBase}/logout/`,
-  register: "/",
+  register: `${accountBase}/create/`,
 };
