@@ -24,13 +24,13 @@ class LogoutView(views.APIView):
         return Response(status=status.HTTP_205_RESET_CONTENT)
 
 
-class NormalUserProfileView(generics.RetrieveUpdateAPIView):
-    serializer_class = serializers.NormalUserProfileSerializer
-    queryset = models.NormalUser
+class UserProfileView(generics.RetrieveUpdateAPIView):
+    serializer_class = serializers.UserProfileSerializer
+    queryset = models.Account
 
 
-class RegisterNormalUserProfileView(generics.CreateAPIView):
-    serializer_class = serializers.NormalUserProfileSerializer
-    queryset = models.NormalUser
+class RegisterUserView(generics.CreateAPIView):
+    serializer_class = serializers.UserProfileSerializer
+    queryset = models.Account
     authentication_classes = []
     permission_classes = (permissions.AllowAny,)
