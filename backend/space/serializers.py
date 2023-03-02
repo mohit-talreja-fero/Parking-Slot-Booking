@@ -108,9 +108,11 @@ class BookSlotSerializer(serializers.ModelSerializer):
         return attrs
 
     def update(self, instance, validated_data: dict):
+        context = self.context
         details = {
             "start_time": validated_data.pop("start_time"),
             "end_time": validated_data.pop("end_time"),
+            "booked_by": context.get("user"),
         }
 
         duration, payment = get_duration_and_payment_for_start_and_end_time(

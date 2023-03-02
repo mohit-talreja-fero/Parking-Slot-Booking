@@ -31,11 +31,16 @@ class SlotViewSet(viewsets.GenericViewSet, mixins.RetrieveModelMixin):
     queryset = models.Slot.objects.all()
     serializer_class = serializers.SLotListSerializer
 
+    def get_serializer_context(self):
+        context = super(SlotViewSet, self).get_serializer_context()
+        context["user"] = self.request.user
+        return context
+
     @action(methods=["PATCH"], detail=True)
     def book_my_slot(self, request, *args, **kwargs):
         data = request.data
         slot = self.get_object()
-        context = super(SlotViewSet, self).get_serializer_context()
+        context = {"user": self.request.user}
         serializer = serializers.BookSlotSerializer(instance=slot, data=data, context=context)
         if not serializer.is_valid():
             return response.Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
